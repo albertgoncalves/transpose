@@ -1,0 +1,10 @@
+*
+!.gitignore
+!*.nix
+!Makefile
+
+!src/
+!*.hs
+
+!assets/
+!*.csv
