@@ -36,7 +36,10 @@ note :: ReadP Note
 note = Note <$> letter <*> many accidental
 
 chord :: ReadP (Note, String)
-chord = (,) <$> note <*> choice (map string ["^", "7", "7alt", "-7", "-7b5", "7b5", "*7", "6", "-6"])
+chord =
+  (,)
+    <$> note
+    <*> choice (map string ["^", "7", "7alt", "-7", "-7b5", "-7b9", "7b5", "*7", "6", "-6"])
 
 row :: ReadP [Maybe (Note, String)]
 row = choice [Just <$> chord, pure Nothing] `sepBy1` char ','
