@@ -3,7 +3,7 @@ FLAGS = \
 	-fdiagnostics-color=always \
 	-ibuild/ \
 	-O \
-	-optl -fuse-ld=lld \
+	-optl-fuse-ld=lld \
 	-outputdir build/ \
 	-Wall \
 	-Wcompat \
