@@ -5,6 +5,7 @@ FLAGS = \
 	-O \
 	-optl-fuse-ld=lld \
 	-outputdir build/ \
+	-fno-warn-x-partial \
 	-Wall \
 	-Wcompat \
 	-Werror \
