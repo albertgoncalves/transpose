@@ -5,7 +5,6 @@ FLAGS = \
 	-O \
 	-optl-fuse-ld=lld \
 	-outputdir build/ \
-	-fno-warn-x-partial \
 	-Wall \
 	-Wcompat \
 	-Werror \
@@ -16,7 +15,8 @@ FLAGS = \
 	-Wpartial-fields \
 	-Wredundant-constraints \
 	-Wunused-packages \
-	-Wunused-type-patterns
+	-Wunused-type-patterns \
+	-fno-warn-x-partial
 MODULES = \
 	Draw \
 	Main \
