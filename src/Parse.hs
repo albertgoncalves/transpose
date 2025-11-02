@@ -40,7 +40,7 @@ chord =
   (,)
     <$> note
     <*> choice
-      (map string ["", "^", "^b5", "7", "7alt", "7b5", "7sus4", "6", "-", "-7", "-7b5", "-6", "*7"])
+      (map string ["", "^", "^b5", "7", "7alt", "7b5", "7sus4", "6", "-", "-7", "-7b5", "-6", "*", "*7"])
 
 row :: ReadP [Maybe (Note, String)]
 row = choice [Just <$> chord, pure Nothing] `sepBy1` char ','
