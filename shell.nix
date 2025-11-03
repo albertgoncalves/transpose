@@ -10,12 +10,14 @@ mkShell.override { stdenv = llvmPackages_19.stdenv; } {
         hlint
         libffi
         llvmPackages_19.lld
+        numactl
         ormolu
     ];
     APPEND_LIBRARY_PATH = lib.makeLibraryPath [
         elfutils
         gmp
         libffi
+        numactl
     ];
     shellHook = ''
         export LD_LIBRARY_PATH="$APPEND_LIBRARY_PATH:$LD_LIBRARY_PATH"
