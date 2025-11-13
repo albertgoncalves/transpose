@@ -35,12 +35,29 @@ accidental = (Flat <$ char 'b') <++ (Sharp <$ char '#')
 note :: ReadP Note
 note = Note <$> letter <*> many accidental
 
+suffixes :: [String]
+suffixes =
+  [ "",
+    "sus2",
+    "add9",
+    "6",
+    "7",
+    "7alt",
+    "7sus4",
+    "^",
+    "^b5",
+    "7b5",
+    "-",
+    "-add9",
+    "-6",
+    "-7",
+    "-7b5",
+    "*",
+    "*7"
+  ]
+
 chord :: ReadP (Note, String)
-chord =
-  (,)
-    <$> note
-    <*> choice
-      (map string ["", "^", "^b5", "7", "7alt", "7b5", "7sus4", "6", "-", "-7", "-7b5", "-6", "*", "*7"])
+chord = (,) <$> note <*> choice (map string suffixes)
 
 row :: ReadP [Maybe (Note, String)]
 row = choice [Just <$> chord, pure Nothing] `sepBy1` char ','
