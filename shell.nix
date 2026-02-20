@@ -1,16 +1,11 @@
 with import <nixpkgs> {};
-mkShell.override { stdenv = llvmPackages_19.stdenv; } {
+mkShell.override { stdenv = llvmPackages_21.stdenv; } {
     buildInputs = [
         (haskellPackages.ghcWithPackages (pkgs: with pkgs; [
             HUnit
         ]))
-        csvkit
-        elfutils
-        gmp
         hlint
-        libffi
-        llvmPackages_19.lld
-        numactl
+        llvmPackages_21.lld
         ormolu
     ];
     APPEND_LIBRARY_PATH = lib.makeLibraryPath [
