@@ -39,6 +39,7 @@ suffixes :: [String]
 suffixes =
   [ "",
     "sus2",
+    "sus4",
     "add9",
     "6",
     "7",
