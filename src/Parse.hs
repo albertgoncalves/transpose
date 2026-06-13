@@ -1,6 +1,6 @@
 module Parse where
 
-import Primitives (Accidental (..), Letter (..), Note (..))
+import Primitives (Accidental (..), Chord (..), Letter (..), Note (..))
 import Text.ParserCombinators.ReadP
   ( ReadP,
     char,
@@ -35,37 +35,44 @@ accidental = (Flat <$ char 'b') <++ (Sharp <$ char '#')
 note :: ReadP Note
 note = Note <$> letter <*> many accidental
 
-suffixes :: [String]
+suffixes :: [ReadP String]
 suffixes =
-  [ "",
-    "sus2",
-    "sus4",
-    "add9",
-    "6",
-    "7",
-    "7alt",
-    "7sus2",
-    "7sus4",
-    "^",
-    "^b5",
-    "7b5",
-    "-",
-    "-add9",
-    "-6",
-    "-7",
-    "-7b5",
-    "*",
-    "*7"
-  ]
+  map
+    string
+    [ "",
+      "sus2",
+      "sus4",
+      "add9",
+      "6",
+      "7",
+      "7alt",
+      "7sus2",
+      "7sus4",
+      "^",
+      "^b5",
+      "7b5",
+      "-",
+      "-add9",
+      "-6",
+      "-7",
+      "-7b5",
+      "*",
+      "*7"
+    ]
 
-chord :: ReadP (Note, String)
-chord = (,) <$> note <*> choice (map string suffixes)
+chord :: ReadP Chord
+chord =
+  choice
+    [ SlashChord <$> note <*> (Just <$> choice suffixes) <*> (char '/' *> note),
+      SlashChord <$> note <*> pure Nothing <*> (char '/' *> note),
+      Chord <$> note <*> choice suffixes
+    ]
 
-row :: ReadP [Maybe (Note, String)]
-row = choice [Just <$> chord, pure Nothing] `sepBy1` char ','
+row :: ReadP [Maybe Chord]
+row = ((Just <$> chord) <++ pure Nothing) `sepBy1` char ','
 
-rows :: ReadP [[Maybe (Note, String)]]
+rows :: ReadP [[Maybe Chord]]
 rows = many1 (row <* newline)
 
-parse :: String -> [[Maybe (Note, String)]]
+parse :: String -> [[Maybe Chord]]
 parse = fst . head . readP_to_S (rows <* eof)

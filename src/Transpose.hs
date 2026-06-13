@@ -1,6 +1,14 @@
 module Transpose where
 
-import Primitives (Accidental (..), Interval (..), Letter (..), Note (..), semitones, steps)
+import Primitives
+  ( Accidental (..),
+    Chord (..),
+    Interval (..),
+    Letter (..),
+    Note (..),
+    semitones,
+    steps,
+  )
 
 class Transpose a where
   transpose :: Interval -> a -> a
@@ -28,3 +36,8 @@ instance Transpose Note where
         | distance < 0 = replicate (-distance) Sharp
         | 0 < distance = replicate distance Flat
         | otherwise = []
+
+instance Transpose Chord where
+  transpose interval (Chord note suffix) = Chord (transpose interval note) suffix
+  transpose interval (SlashChord note suffix bass) =
+    SlashChord (transpose interval note) suffix (transpose interval bass)

@@ -1,4 +1,3 @@
-import Data.Bifunctor (first)
 import Draw (draw)
 import Parse (parse)
 import System.Environment (getArgs)
@@ -11,5 +10,5 @@ main = do
   case args of
     [interval, path] -> do
       chords <- readFile path
-      putStrLn $ draw $ map (map $ fmap $ first $ transpose $ read interval) $ parse chords
+      putStrLn $ draw $ map (map $ fmap $ transpose $ read interval) $ parse chords
     _ -> undefined

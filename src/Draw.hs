@@ -1,7 +1,7 @@
 module Draw where
 
 import Data.List (intercalate)
-import Primitives (Note)
+import Primitives (Chord (..))
 
 pairs :: [a] -> [(a, a)]
 pairs [] = []
@@ -18,21 +18,21 @@ lengths (x : y : zs) = max (length x) (length y) : lengths (y : zs)
 lengths _ = undefined
 
 width :: Int
-width = 8
+width = 10
 
-row :: [Maybe (Note, String)] -> String
+row :: [Maybe Chord] -> String
 row =
   ('|' :)
     . (++ "|")
     . intercalate "|"
     . map (uncurry $ (++) . (++ " "))
     . pairs
-    . map (take (width - 1) . (++ repeat ' ') . maybe "" (uncurry $ (++) . show))
+    . map (take (width - 1) . (++ repeat ' ') . maybe "" show)
 
 grid :: Int -> String
 grid = (++ "+") . intercalate "" . (`replicate` take width ('+' : repeat '-'))
 
-draw :: [[Maybe (Note, String)]] -> String
+draw :: [[Maybe Chord]] -> String
 draw chords =
   intercalate "\n" $
     grid (length $ head chords) : interleave (map row chords) (map grid $ lengths chords)
