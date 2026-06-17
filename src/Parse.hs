@@ -19,15 +19,10 @@ newline = char '\n'
 
 letter :: ReadP Letter
 letter =
-  choice
-    [ A <$ char 'A',
-      B <$ char 'B',
-      C <$ char 'C',
-      D <$ char 'D',
-      E <$ char 'E',
-      F <$ char 'F',
-      G <$ char 'G'
-    ]
+  choice $
+    map
+      (uncurry (<$) . fmap char)
+      [(A, 'A'), (B, 'B'), (C, 'C'), (D, 'D'), (E, 'E'), (F, 'F'), (G, 'G')]
 
 accidental :: ReadP Accidental
 accidental = (Flat <$ char 'b') <++ (Sharp <$ char '#')
@@ -35,38 +30,34 @@ accidental = (Flat <$ char 'b') <++ (Sharp <$ char '#')
 note :: ReadP Note
 note = Note <$> letter <*> many accidental
 
-suffixes :: [ReadP String]
-suffixes =
-  map
-    string
-    [ "",
-      "sus2",
-      "sus4",
-      "add9",
-      "6",
-      "7",
-      "7alt",
-      "7sus2",
-      "7sus4",
-      "^",
-      "^b5",
-      "7b5",
-      "-",
-      "-add9",
-      "-6",
-      "-7",
-      "-7b5",
-      "*",
-      "*7"
-    ]
+suffix :: ReadP String
+suffix =
+  choice $
+    map
+      string
+      [ "",
+        "sus2",
+        "sus4",
+        "add9",
+        "6",
+        "7",
+        "7alt",
+        "7sus2",
+        "7sus4",
+        "^",
+        "^b5",
+        "7b5",
+        "-",
+        "-add9",
+        "-6",
+        "-7",
+        "-7b5",
+        "*",
+        "*7"
+      ]
 
 chord :: ReadP Chord
-chord =
-  choice
-    [ SlashChord <$> note <*> (Just <$> choice suffixes) <*> (char '/' *> note),
-      SlashChord <$> note <*> pure Nothing <*> (char '/' *> note),
-      Chord <$> note <*> choice suffixes
-    ]
+chord = (SlashChord <$> note <*> suffix <*> (char '/' *> note)) <++ (Chord <$> note <*> suffix)
 
 row :: ReadP [Maybe Chord]
 row = ((Just <$> chord) <++ pure Nothing) `sepBy1` char ','

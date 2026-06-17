@@ -1,7 +1,6 @@
 module Primitives where
 
 import Data.List (intercalate)
-import Data.Maybe (fromMaybe)
 
 class Steps a where
   steps :: a -> Int
@@ -55,7 +54,8 @@ data Note = Note Letter [Accidental]
 
 data Chord
   = Chord Note String
-  | SlashChord Note (Maybe String) Note
+  | SlashChord Note String Note
+  deriving (Eq)
 
 instance Show Note where
   show (Note letter accidentals) = intercalate "" $ show letter : map show accidentals
@@ -65,7 +65,7 @@ instance Semitones Note where
 
 instance Show Chord where
   show (Chord note suffix) = show note ++ suffix
-  show (SlashChord note suffix bass) = show note ++ fromMaybe "" suffix ++ "/" ++ show bass
+  show (SlashChord note suffix bass) = show note ++ suffix ++ "/" ++ show bass
 
 data Interval
   = Dim1
