@@ -56,7 +56,8 @@ suffix =
         "-7b5",
         "*",
         "*7",
-        "+"
+        "+",
+        "9"
       ]
 
 chord :: ReadP Chord
