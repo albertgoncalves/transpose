@@ -34,4 +34,5 @@ main =
                ~?= SlashChord (Note D [Flat]) "" (Note E [Flat])
            ]
   where
-    intervals = [Per1, Min2, Maj2, Min3, Maj3, Per4, Aug4, Dim5, Per5, Min6, Maj6, Min7, Maj7]
+    intervals :: [Interval]
+    intervals = [minBound .. maxBound]

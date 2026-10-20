@@ -1,7 +1,5 @@
 module Primitives where
 
-import Data.List (intercalate)
-
 class Steps a where
   steps :: a -> Int
 
@@ -9,25 +7,7 @@ class Semitones a where
   semitones :: a -> Int
 
 data Letter = A | B | C | D | E | F | G
-  deriving (Eq)
-
-instance Show Letter where
-  show A = "A"
-  show B = "B"
-  show C = "C"
-  show D = "D"
-  show E = "E"
-  show F = "F"
-  show G = "G"
-
-instance Steps Letter where
-  steps A = 0
-  steps B = 1
-  steps C = 2
-  steps D = 3
-  steps E = 4
-  steps F = 5
-  steps G = 6
+  deriving (Eq, Enum, Show)
 
 instance Semitones Letter where
   semitones A = 9
@@ -58,7 +38,7 @@ data Chord
   deriving (Eq)
 
 instance Show Note where
-  show (Note letter accidentals) = intercalate "" $ show letter : map show accidentals
+  show (Note letter accidentals) = show letter ++ concatMap show accidentals
 
 instance Semitones Note where
   semitones (Note letter accidentals) = (semitones letter + sum (map semitones accidentals)) `mod` 12
@@ -85,7 +65,7 @@ data Interval
   | Maj6
   | Min7
   | Maj7
-  deriving (Eq)
+  deriving (Eq, Enum, Bounded)
 
 instance Read Interval where
   readsPrec _ "d1" = [(Dim1, [])]

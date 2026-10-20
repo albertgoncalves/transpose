@@ -14,15 +14,8 @@ import Text.ParserCombinators.ReadP
     (<++),
   )
 
-newline :: ReadP Char
-newline = char '\n'
-
 letter :: ReadP Letter
-letter =
-  choice $
-    map
-      (uncurry (<$) . fmap char)
-      [(A, 'A'), (B, 'B'), (C, 'C'), (D, 'D'), (E, 'E'), (F, 'F'), (G, 'G')]
+letter = choice [x <$ string (show x) | x <- [A ..]]
 
 accidental :: ReadP Accidental
 accidental = (Flat <$ char 'b') <++ (Sharp <$ char '#')
@@ -69,7 +62,7 @@ row :: ReadP [Maybe Chord]
 row = ((Just <$> chord) <++ pure Nothing) `sepBy1` char ','
 
 rows :: ReadP [[Maybe Chord]]
-rows = many1 (row <* newline)
+rows = many1 (row <* char '\n')
 
 parse :: String -> [[Maybe Chord]]
 parse = fst . head . readP_to_S (rows <* eof)
